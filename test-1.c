@@ -22,7 +22,6 @@ void show() {
         p = p->next;
     }
 }
-
 void push(char ch) {
     struct Lnode* elem = (struct Lnode *)malloc(sizeof(struct Lnode));
     if(elem == NULL) {
@@ -69,32 +68,69 @@ char end() {
     }
 }
 
+int check(ch) {
+	if(end() == ch) {
+		pop(); 
+		return 1;
+	} else {
+		popAll();
+		return 0;
+	}
+}
+
+int nums[1000000];
+char str[100000];
 
 int main() {
-    char ch;
-    int errCount = 0;
-    while(scanf("%c", &ch) != EOF){
-        if(ch != '\n') {
-             switch(ch) {
-                case '(':
-                case '[':
-                case '{':
-                    push(ch);
-                    break;
-                case ')':
-                    errCount += check('('); 
-                    break;
-                case ']':
-                    errCount += check('['); 
-                    break;
-                case '}':
-                    errCount += check('{'); 
-                    break;
-             }
-        } else {
-            printf("%d\n", errCount + popAll());
-            errCount = 0;
+	int times = 0;//当前字符串数 
+	int count = 0;//有效个数 
+	while(scanf("%d", &times) != EOF && times != 0)  {
+		count = 0;
+		getchar(); 
+		memset(nums, 0, sizeof(nums));
+		while(times--) {
+			int flag = 1;
+			gets(str);
+			int len, i;
+			len = strlen(str);
+			for(i = 0; i < len && flag == 1; i++) {
+				switch(str[i]) {
+	                case '(':
+	                case '[':
+	                case '{':
+	                    push(str[i]);
+	                    break;
+	                case ')':
+	                    if (check('(') != 1) {
+							flag = 0;
+						}
+	                    break;
+	                case ']':
+	                    if (check('[') != 1) {
+							flag = 0;
+						}
+	                    break;
+	                case '}':
+	                    if (check('{') != 1) {
+							flag = 0;
+						}
+	                    break;
+	                default:
+	                	flag = 0;
+	                	break;
+				}
+			}
+			
+			if(flag != 0 && popAll() == 0 && len != 0) {
+				nums[count++] = len;
+			}
         }
-    }
+        
+		printf("%d\n", count);
+        int i = 0;
+		for(i = 0; i < count; i++) {
+			printf("%d ", nums[i]);
+		}
+	}
     return 0;
 }
