@@ -14,14 +14,6 @@ struct Lnode{
     struct Lnode* next;
 };
 
-void show() {
-    struct Lnode* p = StackEnd;
-    int i = 0;
-    while(p != NULL) {
-        printf("%c", p->data);
-        p = p->next;
-    }
-}
 void push(char ch) {
     struct Lnode* elem = (struct Lnode *)malloc(sizeof(struct Lnode));
     if(elem == NULL) {
@@ -130,6 +122,26 @@ int main() {
         int i = 0;
 		for(i = 0; i < count; i++) {
 			printf("%d ", nums[i]);
+		}
+		printf("\n");
+		
+		int j = 0, tmp, min;
+		for(i = 0; i < count - 1; i++) {
+			min = i;
+			for(j = i + 1; j < count; j++) {
+				if(nums[min] > nums[j]) {
+					min = j;
+				}
+			}
+			tmp = nums[min];
+			nums[min] = nums[i];
+			nums[i] = tmp;
+		}
+		
+		if(count % 2) {
+			printf("%d", nums[count/2]);
+		} else {
+			printf("%d", (nums[count/2 - 1] + nums[count/2])/2.0);
 		}
 	}
     return 0;
