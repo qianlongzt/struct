@@ -1,6 +1,34 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+/*
+[[[
+3
+
+]]]
+3
+
+(((]]]
+6
+
+[][]
+0
+
+([[)]]
+2
+
+[(]
+1
+
+[)]
+1
+
+[((]))]
+1
+
+[(])
+2
+*/
 
 /*for stack*/
 void show();
@@ -69,6 +97,19 @@ char end() {
     }
 }
 
+int check(char ch) {
+	int count = 0;
+	if(ch != end()) {
+		count++;
+		if(end() != 0) {
+			count += check(ch);
+		}
+        
+    } else {
+		pop();
+	}
+    return count;
+} 
 
 int main() {
     char ch;
