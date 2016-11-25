@@ -141,7 +141,7 @@ int main() {
 		if(count % 2) {
 			printf("%d\n", nums[count/2]);
 		} else {
-			printf("%d\n", (nums[count/2 - 1] + nums[count/2])/2.0);
+			printf("%d\n", (nums[count/2 - 1] + nums[count/2])/2);
 		}
 	}
     return 0;
