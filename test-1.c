@@ -60,7 +60,7 @@ char end() {
     }
 }
 
-int check(ch) {
+int check(char ch) {
 	if(end() == ch) {
 		pop(); 
 		return 1;
