@@ -2,24 +2,21 @@
 #include <stdlib.h>
 
 typedef struct bitNode{
-    char data;
+    int data;
     char status; //status 0 tree point, 1 root node 2 other node
     struct bitNode *lChild;// if status is 0 then lChild point to root node
     struct bitNode *rChild;
-    struct bitNode *parent;
 }bitNode;
 
 bitNode *createBitTree() {
     bitNode *tmp = (bitNode *)malloc(sizeof(bitNode));
     if(tmp == NULL) {
-        printf("malloc error in createBitTree()\n");
         exit(1);
     }
     tmp->data = 0;
     tmp->status = 0;
     tmp->lChild = NULL;
     tmp->rChild = NULL;
-    tmp->parent = NULL;
     return tmp;
 }
 void freeNode(bitNode* tree) {
@@ -31,26 +28,22 @@ void freeNode(bitNode* tree) {
     }
     free(tree);
 }
-bitNode* addNode(bitNode *tree, char data, int place) {
+bitNode* addNode(bitNode *tree, int data, int place) {
     bitNode *tmp = (bitNode *)malloc(sizeof(bitNode));
     if(tmp == NULL) {
-        printf("malloc error in addNode()\n");
         exit(1);
     }
     tmp->data = data;
     tmp->status = tree ->status == 0 ? 1:2;
     tmp->lChild = NULL;
     tmp->rChild = NULL;
-    tmp->parent = tree;
     if(tree->status == 0 || place == 0) {
         if(tree -> lChild != NULL) {
-            printf("tree lChild not empty\n");
             freeNode(tree->lChild);
         }
         tree -> lChild = tmp;
     } else {
         if(tree -> rChild != NULL) {
-            printf("tree lChild not empty\n");
             freeNode(tree->rChild);
         }
         tree -> rChild = tmp;
@@ -58,45 +51,82 @@ bitNode* addNode(bitNode *tree, char data, int place) {
     return tmp;
 }
 void showTree(bitNode *tree) {
-    if(tree->status == 0 ) {
-        if(tree->lChild == NULL) {
-            printf("empty tree\n");
-        } else {
-            printf("id          data   status          pid       place\n");
-            showTreeWorker(tree->lChild, 0);
-        }
-    } else {
-        printf("id          data   status          pid       place\n");
-        showTreeWorker(tree, 0);
-    }
+	if(tree == NULL) {
+		printf("0 ");
+		return;
+	} else {
+		if(tree->status == 0) {
+			tree = tree->lChild;
+		}
+		printf("%d ", tree->data);
+		showTree(tree->lChild);
+		showTree(tree->rChild);
+	}
 }
-void showTreeWorker(bitNode *tree, int place) {
-    printf("%p    %5c    %3d       %p      %s\n", tree, tree->data, tree -> status, tree->parent, tree -> status <= 1?"root":place?"right":"left");
-    if(tree -> lChild != NULL) {
-          showTreeWorker(tree->lChild, 0);
-    }
-    if(tree -> rChild != NULL) {
-          showTreeWorker(tree->rChild, 1);
-    }
+void create(bitNode* node,int place) {
+	int num;
+	bitNode *tmp;
+	if(scanf("%d", &num) == 0) {
+		exit;
+	}
+	if(num != 0) {
+		tmp = addNode(node, num, place);
+		create(tmp, 0);
+		create(tmp, 1);
+	}
 }
 
+int s[10000];
+int count = 0 ;
+int sum = 0;
 
+void search(bitNode* node, int status){
+	int tmp = sum;
+	if(status != 0) {
+		if(node != NULL) {
+			sum = tmp + node->data;
+			search(node->lChild, 0);
+			search(node->rChild, 0);
+		} else {
+			s[count++]  = sum;
+		}
+	} else {
+		if(node != NULL) {
+			sum = tmp;
+			search(node->lChild, 0);
+			search(node->rChild, 0);
+
+			sum = tmp;
+			search(node->lChild, 0);
+			search(node->rChild, 1);
+						
+			sum = tmp;
+			search(node->lChild, 1);
+			search(node->rChild, 0);
+			
+			sum = tmp;
+			search(node->lChild, 1);
+			search(node->rChild, 1);
+		} else {
+			s[count++]  = sum;
+		}
+	}
+}
 
 int main() {
     bitNode *tree = createBitTree();
-    int num, normal, zero;
-    while(scanf("%d", &num)) {
-		if(0 == num) {
-			zero++;
-		} else {
-			normal++;
+    	count = 0;
+	    create(tree, 0);
+	    sum = 0;
+	    search(tree->lChild, 0);
+	    sum = 0;
+	    search(tree->lChild, 1);
+	    int i=0, max = 0;
+	    for(i = 0; i < count; i++) {
+			if(s[i] > max) {
+				max = s[i];
+			}
 		}
-		if(normal + 1 == zero) {
-			
-			freeNode(tree->lChild);
-		} else {
-    		bitNode *node = addNode(tree, num, 0);
-		}
-	}
+		printf("%d\n", max);
     return 0;
 }
