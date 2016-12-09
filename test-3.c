@@ -16,12 +16,24 @@ int main() {
 		int u, v, w;
 		for(i = 0; i < m; i++) {
 			scanf("%d%d%d", &u, &v, &w);
+			if(u > v) {
+				tmp = u;
+				u = v;
+				v = tmp;	
+			}
+			
 			dp[i][0] = u;
 			dp[i][1] = v;
 			dp[i][2] = w;
 		}
 		
 		scanf("%d%d", &s, &t);
+		if(s > t) {
+			tmp = s;
+			s = t;
+			t = tmp;		
+		}
+		
 		count = 0;
 		search(s, t, 0, 30000);
 		
