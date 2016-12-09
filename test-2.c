@@ -79,10 +79,6 @@ void create(bitNode* node,int place) {
 	}
 }
 
-int s[10000];
-int count = 0 ;
-int sum = 0;
-
 int max(int a, int b) {
 	return a>b?a:b; 
 }
@@ -112,7 +108,6 @@ int search2(bitNode* node, int status) {
 int main() {
     while(1) {
     	bitNode *tree = createBitTree();
-    	count = 0;
 	    create(tree, 0); 
 		int m;
 		m = max(search2(tree->lChild, 0), search2(tree->lChild, 1));
