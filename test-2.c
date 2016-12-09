@@ -20,6 +20,9 @@ bitNode *createBitTree() {
     return tmp;
 }
 void freeNode(bitNode* tree) {
+	if(tree == NULL) {
+		return;
+	}
     if(tree -> lChild != NULL) {
         freeNode(tree->lChild);
     }
@@ -66,7 +69,7 @@ void showTree(bitNode *tree) {
 void create(bitNode* node,int place) {
 	int num;
 	bitNode *tmp;
-	if(scanf("%d", &num) == 0) {
+	if(scanf("%d", &num) == EOF) {
 		exit;
 	}
 	if(num != 0) {
@@ -80,53 +83,41 @@ int s[10000];
 int count = 0 ;
 int sum = 0;
 
-void search(bitNode* node, int status){
-	int tmp = sum;
-	if(status != 0) {
-		if(node != NULL) {
-			sum = tmp + node->data;
-			search(node->lChild, 0);
-			search(node->rChild, 0);
-		} else {
-			s[count++]  = sum;
-		}
-	} else {
-		if(node != NULL) {
-			sum = tmp;
-			search(node->lChild, 0);
-			search(node->rChild, 0);
+int max(int a, int b) {
+	return a>b?a:b; 
+}
 
-			sum = tmp;
-			search(node->lChild, 0);
-			search(node->rChild, 1);
-						
-			sum = tmp;
-			search(node->lChild, 1);
-			search(node->rChild, 0);
-			
-			sum = tmp;
-			search(node->lChild, 1);
-			search(node->rChild, 1);
+int search2(bitNode* node, int status) {
+	if(node == NULL) {
+		return 0;
+	} else {
+		if(status == 0) {
+			return max(
+						max(
+							search2(node->lChild, 0) + search2(node->rChild, 0),
+							search2(node->lChild, 0) + search2(node->rChild, 1)
+						),
+						max(
+							search2(node->lChild, 1) + search2(node->rChild, 0),
+							search2(node->lChild, 1) + search2(node->rChild, 1)
+						)
+					);
 		} else {
-			s[count++]  = sum;
+			return node->data + search2(node->lChild, 0) + search2(node->rChild, 0);
 		}
 	}
 }
 
+
 int main() {
-    bitNode *tree = createBitTree();
+    while(1) {
+    	bitNode *tree = createBitTree();
     	count = 0;
-	    create(tree, 0);
-	    sum = 0;
-	    search(tree->lChild, 0);
-	    sum = 0;
-	    search(tree->lChild, 1);
-	    int i=0, max = 0;
-	    for(i = 0; i < count; i++) {
-			if(s[i] > max) {
-				max = s[i];
-			}
-		}
-		printf("%d\n", max);
+	    create(tree, 0); 
+		int m;
+		m = max(search2(tree->lChild, 0), search2(tree->lChild, 1));
+		printf("%d\n", m);
+		freeNode(tree);
+	} 
     return 0;
 }
