@@ -25,7 +25,7 @@ int main() {
 		count = 0;
 		search(s, t, 0, 30000);
 		
-		int min = dp[0][2];
+		int min = delt[0];
 		for(i = 0; i < count; i++) {
 			if(min > delt[i]) {
 				min = delt[i];
